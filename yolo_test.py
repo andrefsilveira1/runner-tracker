@@ -1,9 +1,10 @@
 from ultralytics import YOLO
 import cv2
 
-model = YOLO('yolov8n.pt')
 
-video_path = 'marathon.mp4'  # Replace with the path to your marathon video
+# Setup
+model = YOLO('yolov8n.pt')
+video_path = 'marathon.mp4'  
 cap = cv2.VideoCapture(video_path)
 
 if not cap.isOpened():
@@ -21,23 +22,17 @@ while cap.isOpened():
     if not ret:
         break
 
-    # Use YOLO model for object detection on the current frame
     results = model(frame, classes=[0], conf=0.4)
 
-    # Display and annotate results
-    annotated_frame = results[0].plot()  # Annotates the detected objects on the frame
+    annotated_frame = results[0].plot() 
 
-    # Show the frame
     cv2.imshow("Marathon Runners Detection", annotated_frame)
 
-    # Write the annotated frame to the output video
     out.write(annotated_frame)
 
-    # Break the loop if 'q' is pressed
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
 
-# Release resources
 cap.release()
 out.release()
 cv2.destroyAllWindows()
